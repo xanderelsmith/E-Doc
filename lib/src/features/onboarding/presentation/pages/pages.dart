@@ -32,12 +32,14 @@ class OnboardingPage extends StatelessWidget {
                     Text(
                       Appstrings.appName,
                       textAlign: TextAlign.center,
-                      style: Apptextstyles.mediumBoldtextStyle,
+                      style: Apptextstyles.mediumBoldtextStyle.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     Text(
                       Appstrings.descriptioon,
                       textAlign: TextAlign.center,
-                      style: Apptextstyles.normaltextStyle,
+                      style: Apptextstyles.mediumBoldtextStyle,
                     ),
                     Text(
                       Appstrings.subdescription,

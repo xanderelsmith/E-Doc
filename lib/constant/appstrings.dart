@@ -1,6 +1,7 @@
 class Appstrings {
-  static String appName = 'HealthAI';
-  static String descriptioon = 'Welcome to Your Personal Healthcare Assistant';
-  static String subdescription =
-      'Manage appointments, access health information, and get expert advice.';
+  static const String appName = 'HealthAI';
+  static const String descriptioon =
+      'Welcome to Your Personal\n Healthcare Assistant';
+  static const String subdescription =
+      'Manage appointments, access health\ninformation, and get expert advice.';
 }
