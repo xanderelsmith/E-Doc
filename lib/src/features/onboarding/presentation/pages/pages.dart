@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:healthai/constant/appstrings.dart';
 import 'package:healthai/theme/appcolors.dart';
 
+import '../../../../../styles/apptextstyles.dart';
+
 class OnboardingPage extends StatelessWidget {
   const OnboardingPage({Key? key}) : super(key: key);
 
@@ -21,7 +23,7 @@ class OnboardingPage extends StatelessWidget {
             Align(
               alignment: const Alignment(0, 0.9),
               child: SizedBox(
-                height: getScreenSize(context).height / 2,
+                height: getScreenSize(context).height / 3,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -30,17 +32,17 @@ class OnboardingPage extends StatelessWidget {
                     Text(
                       Appstrings.appName,
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: AppColors.white),
+                      style: Apptextstyles.mediumBoldtextStyle,
                     ),
                     Text(
                       Appstrings.descriptioon,
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: AppColors.white),
+                      style: Apptextstyles.normaltextStyle,
                     ),
                     Text(
                       Appstrings.subdescription,
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: AppColors.white),
+                      style: Apptextstyles.smalltextStyle,
                     )
                   ],
                 ),
