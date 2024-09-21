@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:healthai/extensions/textstyleext.dart';
+import 'package:healthai/src/features/home/presentation/pages/homepage.dart';
 import 'package:healthai/src/features/onboarding/presentation/pages/onboardingscreen.dart';
 
 import '../../../../../constant/appstrings.dart';
@@ -33,19 +35,21 @@ class IntroScreen extends StatelessWidget {
                   Text(
                     Appstrings.appName,
                     textAlign: TextAlign.center,
-                    style: Apptextstyles.mediumBoldtextStyle.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: Apptextstyles.mediumtextStyle21
+                        .copyWith(
+                          fontWeight: FontWeight.w600,
+                        )
+                        .white,
                   ),
                   Text(
                     Appstrings.descriptioon,
                     textAlign: TextAlign.center,
-                    style: Apptextstyles.mediumBoldtextStyle,
+                    style: Apptextstyles.mediumtextStyle21.white,
                   ),
                   Text(
                     Appstrings.subdescription,
                     textAlign: TextAlign.center,
-                    style: Apptextstyles.smalltextStyle,
+                    style: Apptextstyles.smalltextStyle13.white,
                   )
                 ],
               ),

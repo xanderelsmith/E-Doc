@@ -12,7 +12,8 @@ AnimatedContainer onBoardingDot(
     height: 10,
     width: index == changedValue ? setpositionwidth : 10,
     decoration: BoxDecoration(
-      color: index == changedValue ? AppColors.primaryColor : AppColors.grey,
+      color:
+          index == changedValue ? AppColors.primaryColorblue : AppColors.grey,
       borderRadius: BorderRadius.circular(10),
     ),
   );

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:healthai/theme/appcolors.dart';
 
 class Apptextstyles {
-  static var mediumBoldtextStyle = TextStyle(
-      fontWeight: FontWeight.bold, color: AppColors.white, fontSize: 20);
-  static var mediumtextStyle = TextStyle(color: AppColors.white, fontSize: 20);
-  static var smalltextStyle = TextStyle(color: AppColors.white, fontSize: 13);
-  static var normaltextStyle = TextStyle(color: AppColors.white, fontSize: 15);
+  static var mediumtextStyle21 = const TextStyle(fontSize: 21);
+  static var mediumtextStyle20 = const TextStyle(fontSize: 20);
+  static var smalltextStyle13 = const TextStyle(fontSize: 13);
+  static var smalltextStyle12 = const TextStyle(fontSize: 12);
+  static var smalltextStyle14 = const TextStyle(fontSize: 14);
+  static var smalltextStyle10 = const TextStyle(fontSize: 10);
+  static var normaltextStyle15 = const TextStyle(fontSize: 15);
+  static var normaltextStyle16 = const TextStyle(fontSize: 16);
+  static var normaltextStyle17 = const TextStyle(fontSize: 17);
 }

@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:healthai/constant/appstrings.dart';
 import 'package:healthai/src/features/onboarding/presentation/pages/introscreen.dart';
-import 'package:healthai/theme/appcolors.dart';
 
-import '../../../../../styles/apptextstyles.dart';
-import '../../data/models/onboarding.dart';
 import '../../domain/entities/onboardingdataview.dart';
 
 class OnboardingPage extends StatefulWidget {
@@ -20,7 +16,10 @@ class _OnboardingPageState extends State<OnboardingPage> {
     return Scaffold(
       body: Column(children: [
         Expanded(
-          child: PageView(children: [IntroScreen(), OnBoardingInfoPages()]),
+          child: PageView(children: const [
+            IntroScreen(),
+            OnBoardingInfoPages(),
+          ]),
         )
       ]),
     );

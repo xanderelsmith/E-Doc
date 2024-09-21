@@ -3,10 +3,20 @@ import 'package:healthai/theme/appcolors.dart';
 
 class AppTheme {
   static ThemeData lighttheme = ThemeData.light().copyWith(
-      colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primaryColor),
+      scaffoldBackgroundColor: AppColors.white,
+      appBarTheme: AppBarTheme(
+        backgroundColor: AppColors.white,
+      ),
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: AppColors.primaryColorblue,
+        surface: AppColors.primaryColorblue,
+        onPrimaryContainer: AppColors.primaryColorblue,
+      ),
+      textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(foregroundColor: AppColors.black)),
       elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
               foregroundColor: AppColors.white,
-              backgroundColor: AppColors.primaryColor)));
+              backgroundColor: AppColors.primaryColorblue)));
   static ThemeData darktheme = ThemeData.dark();
 }

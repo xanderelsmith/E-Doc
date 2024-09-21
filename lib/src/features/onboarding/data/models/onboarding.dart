@@ -24,6 +24,6 @@ List<OnboardingModel> onboardinglist = [
   OnboardingModel(
       title: 'Get Expert Advice',
       message:
-          'Ask questions, get answers, and receive\n personalized recommendations.',
+          'Ask questions, get answersm, and receive\n personalized recommendations.',
       imagesrc: 'images/image3.png'),
 ];
