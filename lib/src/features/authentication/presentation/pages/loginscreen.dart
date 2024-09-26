@@ -21,7 +21,7 @@ import '../../../onboarding/presentation/pages/onboardingscreen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
-
+  static String id = 'LoginScreen';
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
@@ -220,11 +220,7 @@ class _LoginScreenState extends State<LoginScreen>
                           TextSpan(
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const SignUpScreen()));
+                                  context.pushReplacementNamed(SignUpScreen.id);
                                 },
                               text: '\t Sign Up',
                               style: TextStyle(

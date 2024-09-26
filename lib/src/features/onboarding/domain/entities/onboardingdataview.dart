@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:healthai/src/features/onboarding/data/models/onboarding.dart';
 import 'package:healthai/src/features/onboarding/presentation/pages/onboardingscreen.dart';
 import 'package:healthai/styles/apptextstyles.dart';
@@ -52,11 +53,7 @@ class _OnBoardingInfoPagesState extends State<OnBoardingInfoPages> {
                 ElevatedButton(
                     onPressed: () {
                       if (isLast) {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const LoginScreen(),
-                            ));
+                        context.pushReplacementNamed(LoginScreen.id);
                       }
                       pageController.nextPage(
                         duration: const Duration(milliseconds: 500),
@@ -69,11 +66,7 @@ class _OnBoardingInfoPagesState extends State<OnBoardingInfoPages> {
                     child: !isLast
                         ? TextButton(
                             onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const LoginScreen(),
-                                  ));
+                              context.pushReplacementNamed(LoginScreen.id);
                             },
                             child: const Text('Skip'))
                         : null)

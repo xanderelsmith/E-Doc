@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:healthai/src/features/authentication/presentation/pages/loginscreen.dart';
+import 'package:healthai/src/features/authentication/presentation/pages/signup.dart';
 
 import '../src/features/home/presentation/pages/homepage.dart';
 import '../src/features/onboarding/presentation/pages/onboardingscreen.dart';
@@ -13,7 +15,30 @@ GoRouter router(bool isLoggedin) => GoRouter(
           path: '/',
           builder: (BuildContext context, GoRouterState state) =>
               const OnboardingPage(),
-          routes: const [],
+          routes: [
+            GoRoute(
+              name: SignUpScreen.id,
+              // redirect: (context, state) {
+              //   print(state.error);
+              //   return isLoggedin == true ? state.path : '/${LogIn.id}';
+              // },
+              path: SignUpScreen.id,
+              builder: (BuildContext context, GoRouterState state) =>
+                  const SignUpScreen(),
+              routes: const <GoRoute>[],
+            ),
+            GoRoute(
+              name: LoginScreen.id,
+              // redirect: (context, state) {
+              //   print(state.error);
+              //   return isLoggedin == true ? state.path : '/${LogIn.id}';
+              // },
+              path: LoginScreen.id,
+              builder: (BuildContext context, GoRouterState state) =>
+                  const LoginScreen(),
+              routes: const <GoRoute>[],
+            ),
+          ],
         ),
         GoRoute(
           name: HomePage.id,

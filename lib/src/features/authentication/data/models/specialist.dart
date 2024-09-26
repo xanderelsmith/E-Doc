@@ -23,6 +23,7 @@ class Specialist extends CustomUserData {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'specialty': specialty,
+      'username': username,
       'name': name,
       'phoneNumber': phoneNumber,
       'profileImageUrl': profileImageUrl,
@@ -35,13 +36,13 @@ class Specialist extends CustomUserData {
     final name = map['name']?.toString() ?? '';
     final phoneNumber = map['phone number']?.toString() ?? '';
     final profileImageUrl = map['profileImageUrl']?.toString() ?? '';
-
+    final username = map['name'] ?? '';
     return Specialist(
       specialty: specialty,
       name: name,
       phoneNumber: phoneNumber,
       profileImageUrl: profileImageUrl,
-      username: '', // Use superclass username if available
+      username: name, // Use superclass username if available
       allergies: [], // Use superclass allergies if available
     );
   }

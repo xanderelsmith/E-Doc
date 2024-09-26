@@ -6,7 +6,7 @@ import 'package:healthai/src/features/authentication/data/models/user.dart';
 class Patient extends CustomUserData {
   String? medicalHistory;
   String email;
-
+  String? address;
   String specialty;
   String name;
   String? phoneNumber;
@@ -16,6 +16,7 @@ class Patient extends CustomUserData {
     required super.username, // Use superclass username if available
     required super.allergies,
     this.medicalHistory,
+    this.address,
     required this.email,
     required this.specialty,
     required super.isSpecialist,
@@ -30,13 +31,14 @@ class Patient extends CustomUserData {
       'email': email,
       'isSpecialist': isSpecialist,
       'name': name,
+      'address': address,
+      'username': username,
       'phoneNumber': phoneNumber,
       'profileImageUrl': profileImageUrl,
     };
   }
 
   factory Patient.fromMap(Map<String, dynamic> map) {
-    // Handle missing or incorrect data types gracefully
     final medicalHistory = map['medicalHistory'] ?? '';
     final email = map['email']?.toString() ?? '';
     final allergies = map['allergies']?.cast<String>() ?? [];
@@ -46,10 +48,12 @@ class Patient extends CustomUserData {
     final phoneNumber = map['phone number']?.toString() ?? '';
     final profileImageUrl = map['profileImageUrl']?.toString() ?? '';
 
-    final username = map['username'] ?? '';
+    final username = map['name'] ?? '';
+    final address = map['address'] ?? '';
 
     return Patient(
       username: username,
+      address: address,
       medicalHistory: medicalHistory,
       email: email,
       allergies: allergies,
@@ -68,6 +72,7 @@ class Patient extends CustomUserData {
 
   Patient copyWith({
     String? medicalHistory,
+    String? address,
     String? email,
     String? specialty,
   }) {
@@ -80,6 +85,7 @@ class Patient extends CustomUserData {
       isSpecialist: isSpecialist,
       name: name,
       phoneNumber: phoneNumber,
+      address: address ?? address,
       profileImageUrl: profileImageUrl,
     );
   }

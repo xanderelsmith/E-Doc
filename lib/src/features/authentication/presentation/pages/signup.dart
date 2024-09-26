@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:go_router/go_router.dart';
 import 'package:healthai/extensions/userextension.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,7 @@ import '../../../home/presentation/pages/homepage.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
-
+  static String id = 'SignUpScreen';
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
 }
@@ -285,11 +286,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                                         ? Patient.fromMap(profiledata)
                                         : Specialist.fromMap(profiledata));
 
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const HomePage(),
-                                    ));
+                                context.pushReplacementNamed(HomePage.id);
                               } catch (e) {
                                 // Handle registration errors
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -317,12 +314,8 @@ class _SignUpScreenState extends State<SignUpScreen>
                             TextSpan(
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
-                                    Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const LoginScreen(),
-                                        ));
+                                    context
+                                        .pushReplacementNamed(LoginScreen.id);
                                   },
                                 text: '\t Log In',
                                 style: TextStyle(

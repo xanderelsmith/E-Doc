@@ -1,4 +1,4 @@
-class CustomUserData {
+abstract class CustomUserData {
   String username;
   bool isSpecialist;
   List allergies;
@@ -7,4 +7,8 @@ class CustomUserData {
     required this.isSpecialist,
     required this.allergies,
   });
+
+  @override
+  String toString() =>
+      'CustomUserData(username: $username, isSpecialist: $isSpecialist, allergies: $allergies)';
 }

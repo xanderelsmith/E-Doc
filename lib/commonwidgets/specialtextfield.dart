@@ -15,6 +15,9 @@ class SpecialTextfield extends StatelessWidget {
   const SpecialTextfield({
     super.key,
     this.maxlines,
+    this.onTap,
+    this.enabled,
+    this.readonly,
     this.controller,
     this.ishidden,
     this.onChanged,
@@ -31,14 +34,16 @@ class SpecialTextfield extends StatelessWidget {
     this.validator,
   });
   final bool? ishidden;
+  final bool? enabled;
   final String? Function(String?)? validator;
   final bool? enableSuggestion;
   final TextEditingController? controller;
   final int? maxlines;
   final InputBorder? border;
   final bool? isMultiline;
-
+  final bool? readonly;
   final EdgeInsets? contentPadding;
+  final Function()? onTap;
   @override
   Widget build(BuildContext context) {
     return TextFormField(
@@ -48,7 +53,10 @@ class SpecialTextfield extends StatelessWidget {
         }
       },
       controller: controller,
+      onTap: onTap,
       validator: validator,
+      readOnly: readonly ?? false,
+      enabled: enabled,
       keyboardType: textInputtype,
       cursorHeight: 20,
       style: Apptextstyles.smalltextStyle14,
@@ -59,6 +67,7 @@ class SpecialTextfield extends StatelessWidget {
       enableSuggestions: enableSuggestion ?? false,
       decoration: InputDecoration(
         labelText: textfieldname,
+        enabled: enabled ?? true,
         labelStyle: Apptextstyles.smalltextStyle14,
         prefixIcon: prefixIcon,
         fillColor: Theme.of(context).canvasColor.withOpacity(0.8),
