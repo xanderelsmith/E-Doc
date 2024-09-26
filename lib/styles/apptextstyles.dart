@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 class Apptextstyles {
+  static var mediumtextStyle24 = const TextStyle(fontSize: 24);
   static var mediumtextStyle21 = const TextStyle(fontSize: 21);
   static var mediumtextStyle20 = const TextStyle(fontSize: 20);
+  static var largetextStyle31 = const TextStyle(fontSize: 31);
   static var smalltextStyle13 = const TextStyle(fontSize: 13);
   static var smalltextStyle12 = const TextStyle(fontSize: 12);
   static var smalltextStyle14 = const TextStyle(fontSize: 14);

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:healthai/theme/appcolors.dart';
 
 import '../src/features/onboarding/presentation/pages/onboardingscreen.dart';
 

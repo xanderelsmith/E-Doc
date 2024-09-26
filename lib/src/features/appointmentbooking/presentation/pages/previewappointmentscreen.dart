@@ -6,11 +6,18 @@ import 'package:healthai/theme/appcolors.dart';
 
 import '../../../../../commonwidgets/expandedbuttons.dart';
 
-class PreviewAppointmentReport extends StatelessWidget {
+class PreviewAppointmentReport extends StatefulWidget {
   const PreviewAppointmentReport({
     super.key,
   });
 
+  @override
+  State<PreviewAppointmentReport> createState() =>
+      _PreviewAppointmentReportState();
+}
+
+class _PreviewAppointmentReportState extends State<PreviewAppointmentReport> {
+  String? selectedProfessional;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,6 +43,7 @@ class PreviewAppointmentReport extends StatelessWidget {
                     ),
                   ),
                   Container(
+                    height: 30,
                     padding: const EdgeInsets.all(5),
                     margin: const EdgeInsets.only(top: 5),
                     decoration: BoxDecoration(
@@ -44,17 +52,26 @@ class PreviewAppointmentReport extends StatelessWidget {
                           width: 2,
                         ),
                         borderRadius: BorderRadius.circular(5)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text('Pulmonologist'),
-                        Text(
-                          'Change',
-                          style: Apptextstyles.smalltextStyle12
-                              .copyWith(fontWeight: FontWeight.bold)
-                              .blue,
-                        ),
-                      ],
+                    child: DropdownButton<String>(
+                      value: selectedProfessional,
+                      items: ['Pulmonologist', 'Physicist']
+                          .map(
+                            (e) => DropdownMenuItem(value: e, child: Text(e)),
+                          )
+                          .toList(),
+                      onChanged: (String? value) {
+                        setState(() {
+                          selectedProfessional = value;
+                        });
+                      },
+                      underline: const SizedBox(),
+                      isExpanded: true,
+                      icon: Text(
+                        'Change',
+                        style: Apptextstyles.smalltextStyle12
+                            .copyWith(fontWeight: FontWeight.bold)
+                            .blue,
+                      ),
                     ),
                   )
                 ],

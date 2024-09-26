@@ -1,13 +1,13 @@
  
-    import '../repositories/repositories.dart';
+    // import '../repositories/repositories.dart';
 
-    class GetAuthenticationUseCase {
-        final AuthenticationRepository repository;
+    // class GetAuthenticationUseCase {
+    //     final AuthenticationRepository repository;
       
-        GetAuthenticationUseCase({required this.repository});
+    //     GetAuthenticationUseCase({required this.repository});
       
-        // Future<User> execute(String userId) async {
-        //   return userRepository.getUser(userId);
-        // }
-      }
+    //     // Future<User> execute(String userId) async {
+    //     //   return userRepository.getUser(userId);
+    //     // }
+    //   }
       

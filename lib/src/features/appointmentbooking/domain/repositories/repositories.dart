@@ -1,5 +1,5 @@
- 
-    abstract class AppointmentbookingRepository {
-        // Future<User> getUser(String userId);
-      }
-    
+import '../../data/models/appointments.dart';
+
+abstract class AppointmentbookingRepository {
+  Future<Appointment> getUser(String userId);
+}

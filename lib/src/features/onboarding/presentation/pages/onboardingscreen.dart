@@ -5,7 +5,7 @@ import '../../domain/entities/onboardingdataview.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
-
+  static String id = 'OnboardingPage';
   @override
   State<OnboardingPage> createState() => _OnboardingPageState();
 }

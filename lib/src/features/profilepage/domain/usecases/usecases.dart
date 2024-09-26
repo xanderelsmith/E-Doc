@@ -1,10 +1,10 @@
  
     import '../repositories/repositories.dart';
 
-    class GetAppointmentbookingUseCase {
-        final AppointmentbookingRepository repository;
+    class GetProfilepageUseCase {
+        final ProfilepageRepository repository;
       
-        GetAppointmentbookingUseCase({required this.repository});
+        GetProfilepageUseCase({required this.repository});
       
         // Future<User> execute(String userId) async {
         //   return userRepository.getUser(userId);

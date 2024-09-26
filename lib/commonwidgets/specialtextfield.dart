@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:healthai/styles/apptextstyles.dart';
+import 'package:healthai/theme/appcolors.dart';
 
 class SpecialTextfield extends StatelessWidget {
   final String? textfieldname;
@@ -12,7 +13,7 @@ class SpecialTextfield extends StatelessWidget {
 
   final Icon? prefixIcon;
   const SpecialTextfield({
-    Key? key,
+    super.key,
     this.maxlines,
     this.controller,
     this.ishidden,
@@ -27,8 +28,10 @@ class SpecialTextfield extends StatelessWidget {
     this.prefixIcon,
     this.border,
     this.contentPadding,
-  }) : super(key: key);
+    this.validator,
+  });
   final bool? ishidden;
+  final String? Function(String?)? validator;
   final bool? enableSuggestion;
   final TextEditingController? controller;
   final int? maxlines;
@@ -38,16 +41,17 @@ class SpecialTextfield extends StatelessWidget {
   final EdgeInsets? contentPadding;
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
       onChanged: (value) {
         if (onChanged != null) {
           onChanged!(value);
         }
       },
       controller: controller,
+      validator: validator,
       keyboardType: textInputtype,
       cursorHeight: 20,
-      style: Apptextstyles.normaltextStyle15,
+      style: Apptextstyles.smalltextStyle14,
       obscureText: ishidden ?? false,
       maxLines: isMultiline == false || maxlines == null ? 1 : maxlines,
       textCapitalization: textCapitalization ?? TextCapitalization.none,
@@ -55,6 +59,7 @@ class SpecialTextfield extends StatelessWidget {
       enableSuggestions: enableSuggestion ?? false,
       decoration: InputDecoration(
         labelText: textfieldname,
+        labelStyle: Apptextstyles.smalltextStyle14,
         prefixIcon: prefixIcon,
         fillColor: Theme.of(context).canvasColor.withOpacity(0.8),
         hintStyle: const TextStyle(fontWeight: FontWeight.w300),
@@ -66,7 +71,9 @@ class SpecialTextfield extends StatelessWidget {
         border: border ??
             OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
-                borderSide: const BorderSide(color: Colors.black)),
+                borderSide: BorderSide(
+                  color: AppColors.lightgrey,
+                )),
       ),
     );
   }

@@ -5,6 +5,7 @@ import 'package:healthai/styles/apptextstyles.dart';
 
 import '../../../home/presentation/pages/homepage.dart';
 import '../../presentation/widgets/onboardinganimated_dot.dart';
+import '../../../authentication/presentation/pages/loginscreen.dart';
 
 class OnBoardingInfoPages extends StatefulWidget {
   const OnBoardingInfoPages({
@@ -54,7 +55,7 @@ class _OnBoardingInfoPagesState extends State<OnBoardingInfoPages> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const HomePage(),
+                              builder: (context) => const LoginScreen(),
                             ));
                       }
                       pageController.nextPage(
@@ -71,7 +72,7 @@ class _OnBoardingInfoPagesState extends State<OnBoardingInfoPages> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const HomePage(),
+                                    builder: (context) => const LoginScreen(),
                                   ));
                             },
                             child: const Text('Skip'))
