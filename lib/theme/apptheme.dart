@@ -12,11 +12,13 @@ class AppTheme {
         surface: AppColors.primaryColorblue,
         onPrimaryContainer: AppColors.primaryColorblue,
       ),
+      tabBarTheme: TabBarTheme(labelColor: AppColors.textButtonColor),
       textButtonTheme: TextButtonThemeData(
-          style: TextButton.styleFrom(foregroundColor: AppColors.black)),
+          style:
+              TextButton.styleFrom(foregroundColor: AppColors.textButtonColor)),
       elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
               foregroundColor: AppColors.white,
               backgroundColor: AppColors.primaryColorblue)));
-  static ThemeData darktheme = ThemeData.dark();
+  static ThemeData darktheme = ThemeData.dark().copyWith();
 }

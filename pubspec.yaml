@@ -28,20 +28,33 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  agora_rtc_engine: ^6.3.2
+  animated_toggle_switch: ^0.8.3
+  audioplayers: ^6.1.0
+  avatar_glow: ^3.0.1
+  cached_network_image: ^3.4.1
   calendar_date_picker2: ^1.1.7
   cloud_firestore: ^5.4.2
   cupertino_icons: ^1.0.8
+  equatable: ^2.0.5
+  firebase_analytics: ^11.3.3
   firebase_auth: ^5.3.0
   firebase_core: ^3.5.0
+  firebase_messaging: ^15.1.3
+  firebase_storage: ^12.3.2
   flutter:
     sdk: flutter
   flutter_dotenv: ^5.1.0
   flutter_hooks: ^0.20.5
+  flutter_local_notifications: ^17.2.3
+  flutter_markdown: ^0.7.3+2
   go_router: ^14.2.8
   google_generative_ai: ^0.4.6
   hooks_riverpod: ^2.5.2
+  http: ^1.2.2
+  image_picker: ^1.1.2
   intl: ^0.19.0
-  speech_to_text: ^7.0.0
+  permission_handler: ^11.3.1
   timeago: ^3.7.0
 
 dev_dependencies:
@@ -63,6 +76,7 @@ flutter:
   assets:
     - images/
     - asset/icon/
+    - asset/audio/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
   # For details regarding adding assets from package dependencies, see

@@ -10,6 +10,7 @@ import 'package:healthai/commonwidgets/logotext.dart';
 import 'package:healthai/extensions/textstyleext.dart';
 import 'package:healthai/src/features/authentication/data/models/patient.dart';
 import 'package:healthai/src/features/authentication/data/models/specialist.dart';
+import 'package:healthai/src/features/authentication/data/models/user.dart';
 import 'package:healthai/src/features/authentication/presentation/pages/loginscreen.dart';
 import 'package:healthai/styles/apptextstyles.dart';
 import 'package:healthai/theme/appcolors.dart';
@@ -258,35 +259,49 @@ class _SignUpScreenState extends State<SignUpScreen>
                                 final userRef = FirebaseFirestore.instance
                                     .collection('users')
                                     .doc(userCredential.user!.email);
-                                var profiledata = {
-                                  'isSpecialist':
-                                      tabController.index == 0 ? false : true,
-                                  'specialty': tabController.index == 1
-                                      ? specialtytextEditingController.text
-                                      : 'Patient',
-                                  'email': userCredential.user!.email,
-                                  'name': fullnameTextEditingControler.text,
-                                  'allergies': [],
-                                  'phone number': 0,
-                                  'profileImageUrl':
-                                      'No profileImage selected..',
-                                };
-                                await userRef.set(profiledata);
 
-                                // Successful registration
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('User created successfully'),
-                                  ),
-                                );
+                                CustomUserData user = tabController.index == 0
+                                    ? Patient(
+                                        username:
+                                            fullnameTextEditingControler.text,
+                                        allergies: [],
+                                        specialty:
+                                            specialtytextEditingController.text,
+                                        name: fullnameTextEditingControler.text,
+                                        phoneNumber: '0',
+                                        profileImageUrl: '',
+                                        email: userCredential.user!.email ?? "")
+                                    : Specialist(
+                                        allergies: [],
+                                        specialty:
+                                            specialtytextEditingController.text,
+                                        name: fullnameTextEditingControler.text,
+                                        phoneNumber: "0",
+                                        profileImageUrl: '',
+                                        email:
+                                            userCredential.user!.email ?? "");
+                                var profiledata = user.toMap();
+                                {
+                                  await userRef.set(profiledata);
 
-                                ref
-                                    .watch(userDetailsProvider.notifier)
-                                    .assignUser(tabController.index == 0
-                                        ? Patient.fromMap(profiledata)
-                                        : Specialist.fromMap(profiledata));
+                                  // Successful registration
+                                  if (context.mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content:
+                                            Text('User created successfully'),
+                                      ),
+                                    );
+                                  }
 
-                                context.pushReplacementNamed(HomePage.id);
+                                  ref
+                                      .watch(userDetailsProvider.notifier)
+                                      .assignUser(tabController.index == 0
+                                          ? Patient.fromMap(profiledata)
+                                          : Specialist.fromMap(profiledata));
+
+                                  context.pushReplacementNamed(HomePage.id);
+                                }
                               } catch (e) {
                                 // Handle registration errors
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -298,7 +313,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                               }
                             }
                           },
-                          title: 'Create Account',
+                          title: const Text('Create Account'),
                         );
                       }),
                     ),

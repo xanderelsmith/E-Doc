@@ -9,7 +9,7 @@ class ExpandedStyledButton extends StatelessWidget {
     required this.title,
   });
   final VoidCallback onTap;
-  final String title;
+  final Widget title;
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
@@ -19,7 +19,7 @@ class ExpandedStyledButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         fixedSize: Size(getScreenSize(context).width - 50, 20),
       ),
-      child: Text(title),
+      child: title,
     );
   }
 }

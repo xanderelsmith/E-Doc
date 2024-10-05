@@ -15,7 +15,9 @@ class SpecialTextfield extends StatelessWidget {
   const SpecialTextfield({
     super.key,
     this.maxlines,
+    this.onFieldSubmitted,
     this.onTap,
+    this.initialValue,
     this.enabled,
     this.readonly,
     this.controller,
@@ -42,8 +44,10 @@ class SpecialTextfield extends StatelessWidget {
   final InputBorder? border;
   final bool? isMultiline;
   final bool? readonly;
+  final String? initialValue;
   final EdgeInsets? contentPadding;
   final Function()? onTap;
+  final Function(String)? onFieldSubmitted;
   @override
   Widget build(BuildContext context) {
     return TextFormField(
@@ -65,6 +69,8 @@ class SpecialTextfield extends StatelessWidget {
       textCapitalization: textCapitalization ?? TextCapitalization.none,
       autocorrect: false,
       enableSuggestions: enableSuggestion ?? false,
+      onFieldSubmitted: onFieldSubmitted,
+      initialValue: initialValue,
       decoration: InputDecoration(
         labelText: textfieldname,
         enabled: enabled ?? true,

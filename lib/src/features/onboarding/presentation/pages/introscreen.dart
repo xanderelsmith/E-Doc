@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:healthai/commonwidgets/logotext.dart';
 import 'package:healthai/extensions/textstyleext.dart';
-import 'package:healthai/src/features/home/presentation/pages/homepage.dart';
 import 'package:healthai/src/features/onboarding/presentation/pages/onboardingscreen.dart';
 
 import '../../../../../constant/appstrings.dart';
@@ -33,9 +32,10 @@ class IntroScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  const LogoText(
-                    fontSize: 31,
-                  ),
+                  Text('e-Doc',
+                      style: Apptextstyles.largetextStyle31.bold.copyWith(
+                        color: Colors.white,
+                      )),
                   Text(
                     Appstrings.descriptioon,
                     textAlign: TextAlign.center,

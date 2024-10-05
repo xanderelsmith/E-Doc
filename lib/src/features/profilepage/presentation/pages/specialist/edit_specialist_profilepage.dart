@@ -1,14 +1,14 @@
 import 'dart:developer';
-
-import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:healthai/commonwidgets/expandedbuttons.dart';
-import 'package:healthai/commonwidgets/logotext.dart';
 import 'package:healthai/commonwidgets/specialtextfield.dart';
 import 'package:healthai/extensions/textstyleext.dart';
-import 'package:healthai/route/routes.dart';
 import 'package:healthai/src/features/appointmentbooking/domain/repositories/userrepository.dart';
 import 'package:healthai/src/features/authentication/data/models/patient.dart';
 import 'package:healthai/src/features/authentication/data/models/specialist.dart';
@@ -20,22 +20,26 @@ import 'package:healthai/src/features/profilepage/data/sources/enums/genotype.da
 import 'package:healthai/styles/apptextstyles.dart';
 import 'package:healthai/theme/appcolors.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import '../../../../../../commonwidgets/tag_chip.dart';
+import '../../../../../../constant/states.dart';
 
-import '../../../../../commonwidgets/tag_chip.dart';
-import '../../../../../constant/states.dart';
-
-class ProfilePage extends ConsumerStatefulWidget {
-  const ProfilePage({super.key});
-
+class EditSpecialistProfilePage extends ConsumerStatefulWidget {
+  const EditSpecialistProfilePage({
+    super.key,
+    required this.baseUser,
+  });
+  final Specialist? baseUser;
+  static String id = 'EditSpecialistProfilePage';
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends ConsumerState<ProfilePage> {
+class _ProfilePageState extends ConsumerState<EditSpecialistProfilePage> {
   late TextEditingController firstName;
   late TextEditingController lastname;
-  CustomUserData? baseUser;
+
   Gender? gender;
   var state = TextEditingController();
   DateTime? date;
@@ -43,35 +47,47 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   late TextEditingController specialtytextEditingController;
 
   var disabilities = TextEditingController();
-  var homeAddressController = TextEditingController();
+  late TextEditingController homeAddressController;
   BloodGroup? bloodgroup;
   Genotype? genotype;
   late TextEditingController allergiesController;
   String? selectedState;
   Set<String> allergies = {};
+  XFile? profileImgFile;
+  List<String> languages = [];
   @override
-  void didChangeDependencies() {
+  void initState() {
+    super.initState();
+
     allergiesController =
         TextEditingController(text: allergies.toList().join(','))
           ..addListener(
             () {},
           );
+    log(widget.baseUser!.toMap().toString());
+    languages = widget.baseUser!.languages ?? [];
+    specialtytextEditingController =
+        TextEditingController(text: widget.baseUser!.specialty);
+    if (widget.baseUser!.dateOfBirth != null) {
+      date = DateTime.tryParse(widget.baseUser!.dateOfBirth ?? "");
+    }
     dateinput = TextEditingController(
         text: date == null ? '' : DateFormat('yyyy-MM-dd').format(date!));
-    baseUser = ref.watch(userDetailsProvider);
-    firstName = TextEditingController(text: (baseUser!).username.split(' ')[0]);
-    lastname = TextEditingController(text: (baseUser!).username.split(' ')[1]);
-    if (baseUser is Patient) {
-      var user = baseUser! as Patient;
-    } else {
-      specialtytextEditingController =
-          TextEditingController(text: (baseUser! as Specialist).specialty);
-    }
-    super.didChangeDependencies();
+
+    homeAddressController = TextEditingController();
+    selectedState = widget.baseUser!.state;
+    gender = widget.baseUser!.gender;
+    firstName =
+        TextEditingController(text: (widget.baseUser!).username.split(' ')[0]);
+    lastname =
+        TextEditingController(text: (widget.baseUser!).username.split(' ')[1]);
+    if (widget.baseUser is Patient) {}
   }
 
   @override
   Widget build(BuildContext context) {
+    var textEditingController =
+        TextEditingController(text: widget.baseUser!.email);
     return Scaffold(
       bottomNavigationBar: SizedBox(
         height: 100,
@@ -80,13 +96,49 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
           children: [
             Center(
                 child: ExpandedStyledButton(
-                    onTap: () {
-                      // FirebaseAuth.instance.currentUser.updateProfile();
+                    onTap: () async {
+                      String? downloadURL;
+                      showDialog(
+                        context: context,
+                        builder: (context) =>
+                            const Center(child: CircularProgressIndicator()),
+                      );
+
+                      Specialist user = (widget.baseUser as Specialist);
+                      if (profileImgFile != null) {
+                        downloadURL = await uploadImage(
+                            File(profileImgFile!.path), user.name);
+                      }
+                      log(languages.toString());
+                      user = user.copyWith(
+                          address: homeAddressController.text,
+                          languages: languages,
+                          state: selectedState,
+                          dateOfBirth: dateinput.text,
+                          specialty: specialtytextEditingController.text,
+                          bloodGroup:
+                              bloodgroup != null ? bloodgroup!.name : '',
+                          genotype: genotype != null ? genotype!.name : '',
+                          name: '${firstName.text} ${lastname.text}',
+                          profileImageUrl: downloadURL,
+                          allergies: allergies.toList(),
+                          gender: gender);
+                      await updateUserToFirestore(user).then(
+                        (value) {
+                          ref
+                              .watch(userDetailsProvider.notifier)
+                              .assignUser(user);
+                          if (!context.mounted) return;
+                          Navigator.pop(context);
+                          context.pop();
+                          context.pop();
+                        },
+                      );
                     },
-                    title: 'Save details')),
+                    title: const Text('Save details'))),
             TextButton(
                 onPressed: () {
-                  context.pushReplacementNamed(OnboardingPage.id);
+                  context.goNamed(OnboardingPage.id);
                 },
                 style: TextButton.styleFrom(foregroundColor: AppColors.red),
                 child: const Text('Log Out'))
@@ -111,20 +163,66 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Center(
-                  child: Container(
-                    margin: const EdgeInsets.only(
-                      bottom: 20,
-                    ),
-                    alignment: Alignment.center,
-                    height: 143,
-                    decoration: BoxDecoration(
-                        color: AppColors.lightgrey,
-                        borderRadius: BorderRadius.circular(
-                          10,
-                        )),
-                    child: Text(
-                      'Upload Photo',
-                      style: Apptextstyles.normaltextStyle15,
+                  child: GestureDetector(
+                    onTap: () async {
+                      var newfile = await ImagePicker()
+                          .pickImage(source: ImageSource.gallery);
+
+                      if (newfile != null) {
+                        setState(() {
+                          profileImgFile = newfile;
+                        });
+                      }
+
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('Added Image Successfully ')));
+                      }
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(
+                        bottom: 20,
+                      ),
+                      alignment: Alignment.center,
+                      height: 143,
+                      width: getScreenSize(context).width,
+                      child: profileImgFile != null
+                          ? Stack(
+                              children: [
+                                Image.file(
+                                  File(profileImgFile!.path),
+                                  fit: BoxFit.cover,
+                                  height: 143,
+                                  width: getScreenSize(context).width,
+                                ),
+                              ],
+                            )
+                          : Stack(
+                              children: [
+                                CachedNetworkImage(
+                                  imageUrl:
+                                      widget.baseUser?.profileImageUrl ?? "",
+                                  fit: BoxFit.cover,
+                                  height: 143,
+                                  errorWidget: (context, url, error) =>
+                                      Container(
+                                    color: AppColors.deepPurple,
+                                    child: const Center(
+                                      child: const Text('Tap to Upload Photo'),
+                                    ),
+                                  ),
+                                  width: getScreenSize(context).width,
+                                ),
+                                Center(
+                                  child: Text(
+                                    'Tap to Replace Photo',
+                                    style: Apptextstyles.normaltextStyle15.white
+                                        .copyWith(fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ],
+                            ),
                     ),
                   ),
                 ),
@@ -137,6 +235,15 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         .bold,
                   ),
                 ),
+                if (ref.watch(userDetailsProvider)!.isSpecialist)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: SpecialTextfield(
+                      textfieldname: 'Specialty/Job Title',
+                      controller: specialtytextEditingController,
+                      textInputtype: TextInputType.emailAddress,
+                    ),
+                  ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8.0),
                   child: SpecialTextfield(
@@ -219,15 +326,13 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                     suffixwidget: const Icon(Icons.calendar_month),
                   ),
                 ),
-                if (ref.watch(userDetailsProvider)!.isSpecialist)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: SpecialTextfield(
-                      textfieldname: 'Specialty/Job Title',
-                      controller: specialtytextEditingController,
-                      textInputtype: TextInputType.emailAddress,
-                    ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: SpecialTextfield(
+                    controller: textEditingController,
+                    textfieldname: 'Email Address',
                   ),
+                ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8.0),
                   child: SpecialTextfield(
@@ -288,112 +393,41 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                       textfieldname: 'Home Address',
                     ),
                   ),
+                const Text('Spoken Language '),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5.0),
-                  child: Text(
-                    'Medical Records',
-                    style: Apptextstyles.smalltextStyle14
-                        .copyWith(color: AppColors.textButtonColor)
-                        .bold,
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 8.0,
                   ),
-                ),
-                Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
-                    child: Container(
-                      height: 50,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 2,
+                  child: SizedBox(
+                    width: getScreenSize(context).width,
+                    child: Wrap(
+                      children: List.generate(
+                        SpokenLanguages.values.length,
+                        (index) => Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Checkbox(
+                                onChanged: (val) {
+                                  setState(() {
+                                    if (languages.contains(
+                                      SpokenLanguages.values[index].name,
+                                    )) {
+                                      languages.remove(
+                                          SpokenLanguages.values[index].name);
+                                    } else {
+                                      languages.add(
+                                          SpokenLanguages.values[index].name);
+                                    }
+                                  });
+                                },
+                                value: languages.contains(
+                                  SpokenLanguages.values[index].name,
+                                )),
+                            Text(SpokenLanguages.values[index].name)
+                          ],
+                        ),
                       ),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                            color: AppColors.black,
-                          )),
-                      child: DropdownButton(
-                        isExpanded: true,
-                        hint: const Text('BloodGroup'),
-                        underline: const SizedBox(),
-                        icon: const Icon(Icons.keyboard_arrow_down_outlined),
-                        value: bloodgroup,
-                        items: BloodGroup.values
-                            .map(
-                              (e) => DropdownMenuItem(
-                                value: e,
-                                child: Text(e.name,
-                                    style: Apptextstyles.smalltextStyle14),
-                              ),
-                            )
-                            .toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            bloodgroup = value;
-                          });
-                        },
-                      ),
-                    )),
-                Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
-                    child: Container(
-                      height: 50,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 2,
-                      ),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                            color: AppColors.black,
-                          )),
-                      child: DropdownButton(
-                        isExpanded: true,
-                        hint: const Text('Gender'),
-                        underline: const SizedBox(),
-                        icon: const Icon(Icons.keyboard_arrow_down_outlined),
-                        value: genotype,
-                        items: Genotype.values
-                            .map(
-                              (e) => DropdownMenuItem(
-                                value: e,
-                                child: Text(e.name,
-                                    style: Apptextstyles.smalltextStyle14),
-                              ),
-                            )
-                            .toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            genotype = value;
-                          });
-                        },
-                      ),
-                    )),
-                Wrap(
-                  spacing: 8,
-                  children: allergies
-                      .map((allergy) => PostTag(
-                          onTap: () => setState(() {
-                                allergies.remove(allergy);
-                              }),
-                          label: allergy.trim()))
-                      .toList(),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: SpecialTextfield(
-                    controller: allergiesController,
-                    onChanged: (value) {
-                      List<String> split = value.trim().split(",");
-                      setState(() {
-                        allergies = split.toSet();
-                      });
-                    },
-                    textfieldname: 'Allergies(e.g drowsiness, fever)',
-                    innerHint: 'Seperate using comma',
-                    contentPadding: const EdgeInsets.only(
-                      top: 20,
-                      left: 10,
                     ),
-                    maxlines: 6,
                   ),
                 ),
                 Padding(
@@ -410,4 +444,41 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
       ),
     );
   }
+}
+
+Future<String> uploadImage(File image, username) async {
+  var split = image.path.split('.');
+  final fileName = '$username.${split.last}';
+  final ref = FirebaseStorage.instance.ref().child('user_images/$fileName');
+
+  try {
+    // Attempt upload, if it fails due to already existing file, catch and delete
+    await ref.putFile(image);
+    return await ref.getDownloadURL();
+  } on FirebaseException catch (e) {
+    if (e.code == 'storage/object-already-exists') {
+      // File already exists, delete and then upload
+      await ref.delete();
+      await ref.putFile(image);
+      return await ref.getDownloadURL();
+    } else {
+      // Re-throw other exceptions
+      rethrow;
+    }
+  }
+}
+
+Future<void> updateUserToFirestore(CustomUserData patient) async {
+  DocumentReference userRef =
+      FirebaseFirestore.instance.collection('users').doc(patient.email);
+  await userRef.update(patient.toMap());
+}
+
+enum SpokenLanguages {
+  igbo,
+  english,
+  yoruba,
+  pidgin,
+  hausa,
+  french,
 }

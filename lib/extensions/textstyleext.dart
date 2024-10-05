@@ -8,4 +8,6 @@ extension AppTextStyleExtensions on TextStyle {
   TextStyle get white => copyWith(color: Colors.white);
   TextStyle get blue => copyWith(color: AppColors.textButtonColor);
   TextStyle get green => copyWith(color: AppColors.green);
+  TextStyle get grey => copyWith(color: AppColors.emailgrey);
+  TextStyle get purple => copyWith(color: AppColors.deepPurple);
 }

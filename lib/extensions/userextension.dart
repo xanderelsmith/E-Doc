@@ -7,7 +7,7 @@ extension UserRefExtension on DocumentSnapshot<Map<String, dynamic>> {
   CustomUserData toCustomUSer() {
     var mapdata = data()!;
     return mapdata['isSpecialist']
-        ? Patient.fromMap(mapdata)
-        : Specialist.fromMap(mapdata);
+        ? Specialist.fromMap(mapdata)
+        : Patient.fromMap(mapdata);
   }
 }

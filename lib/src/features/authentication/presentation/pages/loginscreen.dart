@@ -17,7 +17,6 @@ import '../../../../../commonwidgets/expandedbuttons.dart';
 import '../../../../../commonwidgets/logotext.dart';
 import '../../../../../styles/apptextstyles.dart';
 import '../../../../../theme/appcolors.dart';
-import '../../../onboarding/presentation/pages/onboardingscreen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -54,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen>
     return Scaffold(
       appBar: AppBar(
         leading: const SizedBox(),
-        title: LogoText(),
+        title: const LogoText(),
         centerTitle: true,
       ),
       body: Padding(
@@ -153,26 +152,14 @@ class _LoginScreenState extends State<LoginScreen>
                 children: [
                   Center(child: Consumer(builder: (context, ref, child) {
                     return ExpandedStyledButton(
-                        title: 'Log In',
+                        title: Text('Log In'),
                         onTap: () async {
-                          // var password =
-                          //     passwordtextEditingController.text.trim();
-                          // var verifypassword =
-                          //     passwordtextEditingController.text.trim();
-
-                          // if (_formKey.currentState!.validate()) {
-                          //   FirebaseAuth.instance
-                          //       .createUserWithEmailAndPassword(
-                          //           email: emailtextEditingController.text,
-                          //           password:
-                          //               passwordtextEditingController.text)
-                          //       .then(
-                          //     (value) {
-                          //
-                          // },
-                          // );
-
                           if (_formKey.currentState!.validate()) {
+                            showDialog(
+                              context: context,
+                              builder: (context) => const Center(
+                                  child: CircularProgressIndicator()),
+                            );
                             await FirebaseAuth.instance
                                 .signInWithEmailAndPassword(
                                     email: emailtextEditingController.text,
@@ -186,17 +173,20 @@ class _LoginScreenState extends State<LoginScreen>
                                     .doc(user.email)
                                     .get();
                                 log(userRef.data().toString());
+
                                 ref
                                     .watch(userDetailsProvider.notifier)
                                     .assignUser(userRef.toCustomUSer());
-                                if (!mounted) return;
+                                if (!context.mounted) return;
+                                Navigator.pop(context);
                                 context.pushReplacementNamed(HomePage.id);
                               },
                             ).onError(
                               (e, stackTrace) {
                                 // Navigate to login screen or other appropriate page
 
-                                // Handle registration errors
+                                if (!context.mounted) return;
+                                Navigator.pop(context);
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(

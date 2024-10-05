@@ -1,10 +1,10 @@
  
     import '../repositories/repositories.dart';
 
-    class GetHomeUseCase {
-        final HomeRepository repository;
+    class GetCallfeatureUseCase {
+        final CallfeatureRepository repository;
       
-        GetHomeUseCase({required this.repository});
+        GetCallfeatureUseCase({required this.repository});
       
         // Future<User> execute(String userId) async {
         //   return userRepository.getUser(userId);

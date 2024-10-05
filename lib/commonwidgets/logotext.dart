@@ -15,12 +15,12 @@ class LogoText extends StatelessWidget {
       TextSpan(
         children: [
           TextSpan(
-            text: 'Health',
+            text: 'e-',
             style: Apptextstyles.mediumtextStyle21.copyWith(
                 fontSize: fontSize, color: AppColors.primaryColorblue),
           ),
           TextSpan(
-              text: 'AI',
+              text: 'Doc',
               style: Apptextstyles.mediumtextStyle21
                   .copyWith(
                     fontSize: fontSize,

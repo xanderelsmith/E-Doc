@@ -1,11 +1,10 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-
 import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:healthai/service/notificationservice.dart';
 import 'package:healthai/src/features/appointmentbooking/domain/repositories/userrepository.dart';
 import 'package:healthai/src/features/authentication/data/models/patient.dart';
 import 'package:healthai/src/features/authentication/data/models/specialist.dart';
@@ -17,17 +16,20 @@ import 'package:healthai/theme/apptheme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  LocalNotificationService().requestPermission();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   try {
     FirebaseAuth.instance.authStateChanges();
   } on Exception catch (e) {
-    log(e.toString());
+    if (kDebugMode) {
+      print(e);
+    }
   }
   User? user = FirebaseAuth.instance.currentUser;
   if (user != null) {}
-
+  await LocalNotificationService().init();
   runApp(ProviderScope(
       child: MaterialApp.router(
     title: 'Flutter Demo',
@@ -45,12 +47,12 @@ Future<Map<String, dynamic>?> loadUserData(email, WidgetRef ref) async {
       log(data.toString());
       final userData = userDoc;
       if (data != null) {
-        ref.watch(userDetailsProvider.notifier).assignUser(
-            userData['isSpecialist']
-                ? Specialist.fromMap(data)
-                : Patient.fromMap(data));
+        var user = ref.watch(userDetailsProvider.notifier);
+        user.assignUser(userData['isSpecialist']
+            ? Specialist.fromMap(data)
+            : Patient.fromMap(data));
       }
-      print('yeahh');
+
       return data;
     } else {
       return null;

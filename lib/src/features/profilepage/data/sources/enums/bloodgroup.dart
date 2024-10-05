@@ -1,9 +1,9 @@
 enum BloodGroup {
-  aa('AA'),
-  as('AS'),
-  ss('SS'),
-  cs('CS');
+  a(name: 'A'),
+  b(name: 'B'),
+  ab(name: 'AB'),
+  o(name: 'O');
 
-  const BloodGroup(this.name);
+  const BloodGroup({required this.name});
   final String name;
 }

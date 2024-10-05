@@ -1,9 +1,11 @@
 enum Genotype {
-  genotypeA(name: 'A'),
-  genotypeB(name: 'B'),
-  genotypeAB(name: 'AB'),
-  genotypeO(name: 'O');
+  aa('AA'),
+  as('AS'),
+  ac('AC'),
+  ss('SS'),
+  sc('SC'),
+  cc('CC');
 
-  const Genotype({required this.name});
+  const Genotype(this.name);
   final String name;
 }

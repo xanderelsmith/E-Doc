@@ -4,7 +4,6 @@ import 'package:healthai/src/features/onboarding/data/models/onboarding.dart';
 import 'package:healthai/src/features/onboarding/presentation/pages/onboardingscreen.dart';
 import 'package:healthai/styles/apptextstyles.dart';
 
-import '../../../home/presentation/pages/homepage.dart';
 import '../../presentation/widgets/onboardinganimated_dot.dart';
 import '../../../authentication/presentation/pages/loginscreen.dart';
 
