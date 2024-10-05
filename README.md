@@ -1,16 +1,7 @@
-# healthai
+E-Doc is a cutting-edge telehealth platform designed to bridge the gap between patients and healthcare professionals. With E-Doc, you can easily schedule appointments with specialized doctors, all from the comfort of your own home. No more waiting rooms or long commutes!
 
-A new Flutter project.
+One of the most convenient features of E-Doc is its real-time communication capabilities. Whether you need a quick consultation or an in-depth discussion, E-Doc offers both audio and video calls, ensuring a seamless and personalized healthcare experience.
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+initially named as healthai but E-doc sounds better,😉😉😉

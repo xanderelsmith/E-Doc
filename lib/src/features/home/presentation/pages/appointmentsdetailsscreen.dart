@@ -8,6 +8,7 @@ import 'package:avatar_glow/avatar_glow.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:healthai/extensions/textstyleext.dart';
@@ -15,8 +16,10 @@ import 'package:healthai/src/features/appointmentbooking/data/models/appointment
 import 'package:healthai/src/features/appointmentbooking/presentation/pages/bookingsubmissionscreen.dart';
 import 'package:healthai/src/features/callfeature/presentation/pages/callscreen.dart';
 
+import '../../../../../service/notificationservice.dart';
 import '../../../../../styles/apptextstyles.dart';
 import '../../../../../theme/appcolors.dart';
+import '../../../authentication/data/models/specialist.dart';
 import '../../../onboarding/presentation/pages/onboardingscreen.dart';
 import '../../../payment/presentation/pages/makepayment_screen.dart';
 import '../widgets/doctorbiocard.dart';
@@ -40,10 +43,12 @@ class _AppointmentDetailsScreenState extends State<AppointmentDetailsScreen> {
   TimeOfDay timeOfDay = const TimeOfDay(hour: 9, minute: 41);
   String switchvalue = 'AM';
   late StreamController streamController;
-
+  late Specialist specialist;
+  bool iAmCaller = false;
   @override
   void initState() {
     appointment = widget.appointmentData['appointment'];
+    specialist = widget.appointmentData['otherUser'];
     list = appointment.dates
         .map(
           (e) => e.toDate(),
@@ -55,6 +60,15 @@ class _AppointmentDetailsScreenState extends State<AppointmentDetailsScreen> {
           (event) {
             setState(() {
               appointment = Appointment.fromQuerySnapshot(event);
+
+              if (appointment.isCalling && iAmCaller == false) {
+                LocalNotificationService().showNotification(RemoteMessage(
+                  messageId: '1',
+                  notification: RemoteNotification(
+                      title: 'Incoming Call',
+                      body: 'Dr ${specialist.name} is calling you '),
+                ));
+              }
               log('sucess');
             });
           },
@@ -151,12 +165,28 @@ class _AppointmentDetailsScreenState extends State<AppointmentDetailsScreen> {
                         borderRadius: BorderRadius.circular(5)),
                   ),
                   onPressed: () {
+                    if (appointment.token == '') {
+                      setState(() {
+                        iAmCaller = true;
+                      });
+                    } else {
+                      setState(() {
+                        iAmCaller = false;
+                      });
+                    }
                     context.pushNamed(
                       CallScreen.id,
                       extra: {
                         'otherUser': widget.appointmentData['otherUser'],
-                        'sendMessage': (token) {},
-                        'endCall': (token) {},
+                        'endCall': (token) {
+                          setState(() {
+                            iAmCaller = false;
+                          });
+                          endCall(appointment, token);
+                        },
+                        'sendMessage': (token) {
+                          setAppointmentToCalling(appointment, token);
+                        },
                         'callId':
                             appointment.token == '' ? null : appointment.token
                       },

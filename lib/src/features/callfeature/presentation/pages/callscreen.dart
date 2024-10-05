@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'dart:math' as math;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import 'dart:developer';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
+import 'package:healthai/service/ringtone.dart';
+import 'package:healthai/theme/appcolors.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
@@ -33,7 +36,8 @@ class CallScreen extends StatefulWidget {
   State<CallScreen> createState() => _CallScreenState();
 }
 
-class _CallScreenState extends State<CallScreen> {
+class _CallScreenState extends State<CallScreen>
+    with SingleTickerProviderStateMixin {
   int? _remoteUid;
   final int _myUid = 0;
   String channel = "test";
@@ -47,8 +51,24 @@ class _CallScreenState extends State<CallScreen> {
 
   int secondsElapsed = 0;
   Timer? timer;
+  late AnimationController animationController;
+  late Animation animation;
   @override
   void initState() {
+    animationController =
+        AnimationController(vsync: this, duration: const Duration(seconds: 2));
+    animation = Tween<double>(begin: 0, end: 3).animate(animationController!);
+
+    animation!.addListener(() {
+      setState(() {
+        log('animationController ${animationController!.value}');
+        log('animation${animation!.value.toString()}');
+      });
+    });
+
+    animationController.repeat(
+        reverse: true); // Repeat the animation indefinitely
+
     super.initState();
 
     isVideoScreen = widget.isVideoCall;
@@ -102,6 +122,7 @@ class _CallScreenState extends State<CallScreen> {
           debugPrint("remote user $remoteUid joined");
           setState(() {
             _remoteUid = remoteUid;
+
             log(_remoteUid.toString());
           });
         },
@@ -139,6 +160,8 @@ class _CallScreenState extends State<CallScreen> {
 
   @override
   void dispose() {
+    animationController.dispose();
+
     timer?.cancel();
     _dispose();
     super.dispose();
@@ -272,9 +295,9 @@ class _CallScreenState extends State<CallScreen> {
               ),
             ),
           !_localUserJoined
-              ? Dialog(
+              ? Center(
                   child: SizedBox(
-                    height: 100,
+                    height: 150,
                     child: Column(children: [
                       Expanded(
                           child: Padding(
@@ -285,10 +308,24 @@ class _CallScreenState extends State<CallScreen> {
                                 : 'Preparing Call, please wait',
                             style: const TextStyle(fontSize: 20)),
                       )),
-                      const Expanded(
+                      Center(
                           child: Padding(
                         padding: EdgeInsets.all(8.0),
-                        child: LinearProgressIndicator(),
+                        child: CircleAvatar(
+                          radius: 25,
+                          backgroundColor: AppColors.green,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Transform.rotate(
+                              angle: (animationController.value - 3) * math.pi,
+                              child: Icon(
+                                Icons.call_end,
+                                size: 30,
+                                color: AppColors.white,
+                              ),
+                            ),
+                          ),
+                        ),
                       ))
                     ]),
                   ),

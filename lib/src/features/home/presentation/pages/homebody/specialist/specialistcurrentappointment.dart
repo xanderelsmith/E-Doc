@@ -9,8 +9,6 @@ import 'package:healthai/src/features/home/presentation/widgets/patienthomepageb
 
 import '../../../../../../../styles/apptextstyles.dart';
 import '../../../../../appointmentbooking/data/models/appointments.dart';
-import '../../../../../authentication/data/models/patient.dart';
-import '../../../widgets/specialistdataappointmentwidget.dart';
 
 class SpecialistCurrentAppointment extends StatefulWidget {
   const SpecialistCurrentAppointment({

@@ -8,6 +8,7 @@ import 'package:healthai/service/notificationservice.dart';
 import 'package:healthai/src/features/appointmentbooking/domain/repositories/userrepository.dart';
 import 'package:healthai/src/features/authentication/data/models/patient.dart';
 import 'package:healthai/src/features/authentication/data/models/specialist.dart';
+import 'package:healthai/src/features/home/presentation/pages/homepage.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:healthai/firebase_options.dart';
@@ -38,7 +39,8 @@ Future<void> main() async {
   )));
 }
 
-Future<Map<String, dynamic>?> loadUserData(email, WidgetRef ref) async {
+Future<Map<String, dynamic>?> loadUserData(
+    email, WidgetRef ref, context) async {
   try {
     final userDoc =
         await FirebaseFirestore.instance.collection('users').doc(email).get();
@@ -47,15 +49,17 @@ Future<Map<String, dynamic>?> loadUserData(email, WidgetRef ref) async {
       log(data.toString());
       final userData = userDoc;
       if (data != null) {
-        var user = ref.watch(userDetailsProvider.notifier);
-        user.assignUser(userData['isSpecialist']
+        var userRepo = ref.watch(userDetailsProvider.notifier);
+        userRepo.assignUser(userData['isSpecialist']
             ? Specialist.fromMap(data)
             : Patient.fromMap(data));
       }
 
       return data;
     } else {
-      return null;
+      if (context.mounted) {
+        context.goNamed(HomePage.id);
+      }
     }
   } catch (e) {
     // Handle errors

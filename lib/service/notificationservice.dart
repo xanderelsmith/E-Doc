@@ -4,33 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 
 class LocalNotificationService {
-  Future<void> uploadFCMToken(String email) async {
-    final userRef = FirebaseFirestore.instance.collection('users').doc(email);
-    try {
-      FirebaseMessaging.instance.getToken().then(
-        (token) async {
-          await userRef.update({
-            'notificationToken': token,
-          });
-        },
-      );
-
-      FirebaseMessaging.instance.onTokenRefresh.listen(
-        (token) async {
-          log('onTokenRefresh::$token');
-          await FirebaseFirestore.instance.collection('users').doc().set({
-            'notificationToken': token,
-          });
-        },
-      );
-    } catch (e) {
-      print(e.toString());
-    }
-  }
-
   Future<void> requestPermission() async {
     PermissionStatus status = await Permission.notification.request();
     if (status != PermissionStatus.granted) {

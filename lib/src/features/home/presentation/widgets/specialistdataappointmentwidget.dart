@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:healthai/extensions/datetimeexts.dart';
+import 'package:healthai/service/ringtone.dart';
 import 'package:healthai/src/features/appointmentbooking/data/models/appointments.dart';
 import 'package:healthai/src/features/appointmentbooking/domain/repositories/userrepository.dart';
 import 'package:healthai/src/features/authentication/data/models/specialist.dart';
@@ -29,7 +30,10 @@ class _AppointState extends ConsumerState<AppointmentSpecialistDataWidget> {
   @override
   void initState() {
     streamController = StreamController()
-      ..addStream(widget.appointment.specialist.snapshots());
+      ..addStream(widget.appointment.specialist.snapshots()
+        ..listen(
+          (event) {},
+        ));
     super.initState();
   }
 

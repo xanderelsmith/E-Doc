@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -16,13 +17,41 @@ import '../../../onboarding/presentation/pages/onboardingscreen.dart';
 import '../../domain/repositories/specialist_repository.dart';
 import '../widgets/patient_data_appointmentwidget.dart';
 
-class SpecialistHomeBody extends ConsumerWidget {
-  const SpecialistHomeBody({
-    super.key,
-  });
+class SpecialistHomeBody extends ConsumerStatefulWidget {
+  const SpecialistHomeBody({required this.specialist, super.key});
+  final Specialist specialist;
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _SpecialistHomeBodyState();
+}
+
+class _SpecialistHomeBodyState extends ConsumerState<SpecialistHomeBody> {
+  late StreamController streamController;
+  List<DateTime> list = [];
+  @override
+  void initState() {
+    streamController = StreamController()
+      ..addStream(getmyPatientsBookedList(widget.specialist)
+        ..listen(
+          (event) {
+            log(event.toString());
+            setState(() {
+              for (var doc in event.docs) {
+                // Get the Appointment object from the document
+                Appointment appointment = Appointment.fromQuerySnapshot(doc);
+
+                list.addAll(appointment.dates
+                    .map((timestamp) => timestamp.toDate())
+                    .toList());
+              }
+            });
+          },
+        ));
+    super.initState();
+  }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return SizedBox(
       width: getScreenSize(context).width,
       child: Padding(
@@ -42,7 +71,7 @@ class SpecialistHomeBody extends ConsumerWidget {
                             calendarViewMode: CalendarDatePicker2Mode.day,
                             controlsHeight: 50,
                             calendarType: CalendarDatePicker2Type.multi),
-                        value: const [],
+                        value: list,
                       ),
                     ),
                   ),
@@ -54,8 +83,7 @@ class SpecialistHomeBody extends ConsumerWidget {
                   ),
                   Expanded(
                     child: StreamBuilder(
-                        stream: getmyPatientsBookedList(
-                            ref.watch(userDetailsProvider) as Specialist),
+                        stream: streamController.stream,
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {

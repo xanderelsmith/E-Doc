@@ -112,19 +112,19 @@ class _ProfilePageState extends ConsumerState<EditPatientProfilePage> {
                         }
                         user = user.copyWith(
                             address: homeAddressController.text,
-                            bloodGroup: bloodgroup!,
-                            genotype: genotype!,
+                            bloodGroup: bloodgroup,
+                            genotype: genotype,
                             name: '${firstName.text} ${lastname.text}',
                             allergies: allergies.toList(),
                             dateOfBirth: dateinput.text,
                             state: selectedState,
                             disability: disabilities.text,
                             gender: gender);
+                        ref
+                            .watch(userDetailsProvider.notifier)
+                            .assignUser(user);
                         await updateUserToFirestore(user).then(
                           (value) {
-                            ref
-                                .watch(userDetailsProvider.notifier)
-                                .assignUser(user);
                             if (!context.mounted) return;
                             Navigator.pop(context);
                             context.pop();
@@ -210,6 +210,7 @@ class _ProfilePageState extends ConsumerState<EditPatientProfilePage> {
                               children: [
                                 Image.file(
                                   File(profileImgFile!.path),
+                                  alignment: Alignment.topCenter,
                                   fit: BoxFit.cover,
                                   height: 143,
                                   width: getScreenSize(context).width,

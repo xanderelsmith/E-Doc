@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:healthai/src/features/authentication/data/models/patient.dart';
@@ -116,6 +118,7 @@ GoRouter router(bool isLoggedin) => GoRouter(
                 name: CallScreen.id,
                 path: CallScreen.id,
                 builder: (BuildContext context, GoRouterState state) {
+                  log(state.extra.toString());
                   return CallScreen(
                     endCall: (state.extra as Map)['endCall'],
                     isVideoCall: true,

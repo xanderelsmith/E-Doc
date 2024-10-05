@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:avatar_glow/avatar_glow.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -45,9 +46,7 @@ class _SpecialistViewbookinginfoState
         ..listen(
           (event) {
             setState(() {
-              if (event != null) {
-                appointment = Appointment.fromQuerySnapshot(event);
-              }
+              appointment = Appointment.fromQuerySnapshot(event);
             });
 
             if (appointment.isCalling && iAmCaller == false) {
@@ -67,9 +66,8 @@ class _SpecialistViewbookinginfoState
 
   @override
   Widget build(BuildContext context) {
-    Appointment appointment = widget.appointmentData['appointment'];
     DateTime date = appointment.dates.first.toDate();
-    Patient patient = widget.appointmentData['patient'];
+    patient = widget.appointmentData['patient'];
 
     return Scaffold(
       bottomNavigationBar: Row(
@@ -86,7 +84,9 @@ class _SpecialistViewbookinginfoState
               onPressed: null,
               label: const Text('Chat Patient')),
           ElevatedButton.icon(
-              icon: const Icon(Icons.phone_outlined),
+              icon: appointment.isCalling
+                  ? AvatarGlow(child: const Icon(Icons.call))
+                  : const Icon(Icons.phone_outlined),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.green,
                 fixedSize: Size(getScreenSize(context).width / 2.2, 30),

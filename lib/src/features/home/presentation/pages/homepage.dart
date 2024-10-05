@@ -39,10 +39,8 @@ class _HomePageState extends ConsumerState<HomePage> {
   void initState() {
     LocalNotificationService().notificationHandler();
     var email = FirebaseAuth.instance.currentUser!.email;
-    loadUserData(email, ref).then(
-      (value) {
-        LocalNotificationService().uploadFCMToken(value!['email']);
-      },
+    loadUserData(email, ref, context).then(
+      (value) {},
     );
     super.initState();
   }

@@ -1,3 +1,4 @@
+import 'package:avatar_glow/avatar_glow.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -65,24 +66,39 @@ class AppointmentPatientDataWidget extends ConsumerWidget {
                     SizedBox(
                       height: 50,
                       width: 50,
-                      child: CachedNetworkImage(
-                        imageUrl: specialist.profileImageUrl,
-                        imageBuilder: (context, imageProvider) => Container(
-                          width: 50,
-                          height: 50,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              image: DecorationImage(
-                                  image: imageProvider, fit: BoxFit.cover)),
-                        ),
-                        errorWidget: (context, url, error) => Container(
-                            width: 50,
-                            height: 50,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.grey,
-                            )),
-                        fit: BoxFit.cover,
+                      child: Stack(
+                        children: [
+                          CachedNetworkImage(
+                            imageUrl: specialist.profileImageUrl,
+                            imageBuilder: (context, imageProvider) => Container(
+                              width: 50,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  image: DecorationImage(
+                                      image: imageProvider, fit: BoxFit.cover)),
+                            ),
+                            errorWidget: (context, url, error) => Container(
+                                width: 50,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.grey,
+                                )),
+                            fit: BoxFit.cover,
+                          ),
+                          if (appointment.isCalling)
+                            Align(
+                              alignment: const Alignment(0.8, 0.8),
+                              child: AvatarGlow(
+                                  glowColor: Colors.red,
+                                  glowRadiusFactor: 1.5,
+                                  child: CircleAvatar(
+                                    backgroundColor: Colors.blue[900],
+                                    radius: 5,
+                                  )),
+                            )
+                        ],
                       ),
                     ),
                     Expanded(

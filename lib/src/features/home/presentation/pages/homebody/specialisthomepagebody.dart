@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:healthai/src/features/home/presentation/pages/homebody/specialist/specialistcurrentappointment.dart';
 import 'package:healthai/src/features/home/presentation/pages/specialisthomescreenbody.dart';
-import 'package:healthai/src/features/home/presentation/widgets/patienthomepagebody.dart';
 
-import '../../../../authentication/data/models/patient.dart';
 import '../../../../authentication/data/models/specialist.dart';
 
 class GetSpecialistHomeScreenBody extends StatelessWidget {
@@ -16,7 +14,9 @@ class GetSpecialistHomeScreenBody extends StatelessWidget {
     return IndexedStack(
       index: index,
       children: [
-        const SpecialistHomeBody(),
+        SpecialistHomeBody(
+          specialist: user!,
+        ),
         SpecialistCurrentAppointment(
           specialist: user,
         ),

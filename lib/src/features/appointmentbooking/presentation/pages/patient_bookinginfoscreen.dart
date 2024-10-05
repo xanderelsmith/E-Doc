@@ -9,6 +9,8 @@ import 'package:intl/intl.dart';
 
 import '../../../../../styles/apptextstyles.dart';
 import '../../../../../theme/appcolors.dart';
+import '../../../callfeature/presentation/pages/callscreen.dart';
+import '../../../home/presentation/pages/setdatetimescreen.dart';
 import '../../../onboarding/presentation/pages/onboardingscreen.dart';
 
 class BookingInfoScreen extends ConsumerWidget {
@@ -39,16 +41,19 @@ class BookingInfoScreen extends ConsumerWidget {
                 ),
                 onPressed: null,
                 label: const Text('Chat Doctor')),
-            ElevatedButton.icon(
-                icon: const Icon(Icons.phone_outlined),
+            ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.green,
+                  backgroundColor: AppColors.primaryColorblue,
                   fixedSize: Size(getScreenSize(context).width / 2.2, 30),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5)),
                 ),
-                onPressed: () {},
-                label: const Text('Call Doctor'))
+                onPressed: () {
+                  context.pushNamed(
+                    HomePage.id,
+                  );
+                },
+                child: const Text('Go Home'))
           ],
         ),
         appBar: AppBar(
